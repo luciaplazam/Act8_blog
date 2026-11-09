@@ -1,0 +1,29 @@
+CREATE DATABASE IF NOT EXISTS blog_db
+  CHARACTER SET utf8mb4
+  COLLATE utf8mb4_unicode_ci;
+
+USE blog_db;
+
+CREATE TABLE IF NOT EXISTS authors (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(150) NOT NULL,
+  email VARCHAR(254) NOT NULL,
+  image VARCHAR(2048) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY uq_authors_email (email)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS posts (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  category VARCHAR(100) NOT NULL,
+  author_id INT UNSIGNED NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_posts_author_id (author_id),
+  CONSTRAINT fk_posts_author
+    FOREIGN KEY (author_id) REFERENCES authors (id)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB;
